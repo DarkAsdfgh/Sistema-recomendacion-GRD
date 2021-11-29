@@ -20,6 +20,8 @@ ratings = pd.read_csv("ratings.csv")
 movies = pd.read_csv("movies.csv")
 
 movies = movies[['movieId', 'title']]
+ratings = ratings[['userId','movieId','rating']]
+
 list_titulos = movies['title'].tolist()
 list_moviesID = movies['movieId'].tolist()
 
@@ -43,6 +45,17 @@ for movie in randomMovies:
 
 for v in valoraciones:
     print(v)
+
+
+
+#PEARSON
+
+user_rating = {}
+
+#
+
+
+
 
 
 
