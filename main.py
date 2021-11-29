@@ -8,7 +8,7 @@ movies = pd.read_csv("movies.csv")
 
 movies = movies[['movieId', 'title']]
 list_titulos = movies['title'].tolist()
-print(random.sample(list_titulos, 20))
+# print(random.sample(list_titulos, 20))
 class Movie:
     def __init__(self, movieId, title):
         self.movieId = movieId
@@ -19,3 +19,5 @@ class Rating:
         self.userId = userId
         self.movieId = movieId
         self.rating = rating
+
+print(movies)
