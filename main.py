@@ -25,6 +25,7 @@ class Rating:
 
 ratings = pd.read_csv("ratings.csv")
 movies = pd.read_csv("movies.csv")
+movies.set_index("movieId")
 
 movies = movies[['movieId', 'title']]
 ratings = ratings[['userId','movieId','rating']]
@@ -32,12 +33,9 @@ ratings = ratings[['userId','movieId','rating']]
 list_titulos = movies['title'].tolist()
 list_moviesID = movies['movieId'].tolist()
 
-movies = {}
+randomMovies = movies.sample(4)
 
-for t, m in zip(list_titulos, list_moviesID):
-    movies[m] = t
-
-randomMovies = random.sample(movies.items(), 4)
+print(randomMovies)
 
 valoraciones = []
 
@@ -48,14 +46,13 @@ userset = set(userlist);
 
 total = 0
 
-for movie in randomMovies:
-    valoracion = input("Introduce valoriación de la pelicula " + movie[1] + "\n")
-    rating = Rating(userID,movie[0],valoracion) 
+for movie in randomMovies.itertuples():
+    valoracion = input("Introduce valoración de la pelicula " + str(movie[2]) + "\n")
+    rating = Rating(userID,movie[1],valoracion) 
     valoraciones.append(rating)
     total += int(valoracion)
 
 media_actual = total/len(randomMovies)
-
 
 for v in valoraciones:
     print(v)
@@ -65,18 +62,13 @@ for i in range(1,max(userlist)+1,1):
     user_rating = ratings.groupby(ratings.userId).get_group(i)
     media = user_rating['rating'].mean()
     
-    for r in randomMovies:
-        for u in user_rating.items():
-            if r[0] in user_rating.movieId:
-                #tmp = user_rating.loc[user_rating["movieId"]== r[0], ["rating"]]
-                #print(tmp)
-                print(u[1])
+    for r in randomMovies.itertuples():
+        if r[1] in user_rating.movieId.values:
+            print("Usuario " + str(i) + "\tPelícula " + r[2])
+            tmp = user_rating.loc[user_rating['movieId'] == r[1], ['rating']].values
+            print(tmp)
+
 
             
 
     #print(user_rating)
-    
-
-
-
-
