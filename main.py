@@ -41,24 +41,42 @@ randomMovies = random.sample(movies.items(), 4)
 
 valoraciones = []
 
-userID = ratings['userId'].tolist()
-userID = userID[-1] + 1
+userlist = ratings['userId'].tolist()
+userID = userlist[-1] + 1
+
+userset = set(userlist);
+
+total = 0
 
 for movie in randomMovies:
     valoracion = input("Introduce valoriación de la pelicula " + movie[1] + "\n")
     rating = Rating(userID,movie[0],valoracion) 
     valoraciones.append(rating)
+    total += int(valoracion)
+
+media_actual = total/len(randomMovies)
 
 
 for v in valoraciones:
     print(v)
 
 
+for i in range(1,max(userlist)+1,1):
+    user_rating = ratings.groupby(ratings.userId).get_group(i)
+    media = user_rating['rating'].mean()
+    
+    for r in randomMovies:
+        for u in user_rating.items():
+            if r[0] in user_rating.movieId:
+                #tmp = user_rating.loc[user_rating["movieId"]== r[0], ["rating"]]
+                #print(tmp)
+                print(u[1])
 
-#PEARSON
+            
 
-user_rating = {}
+    #print(user_rating)
+    
 
-#
+
 
 
