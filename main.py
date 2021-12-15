@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np
 import random
 
+from scipy import stats
 
+np.seterr('ignore')
 ratings = pd.read_csv("ratings.csv")
 movies = pd.read_csv("movies.csv")
 
@@ -33,7 +35,7 @@ ratings = ratings[['userId','movieId','rating']]
 list_titulos = movies['title'].tolist()
 list_moviesID = movies['movieId'].tolist()
 
-randomMovies = movies.sample(4)
+randomMovies = movies.sample(20)
 
 print(randomMovies)
 
@@ -49,26 +51,32 @@ total = 0
 for movie in randomMovies.itertuples():
     valoracion = input("Introduce valoración de la pelicula " + str(movie[2]) + "\n")
     rating = Rating(userID,movie[1],valoracion) 
-    valoraciones.append(rating)
+    valoraciones.append(float(valoracion))
     total += int(valoracion)
 
 media_actual = total/len(randomMovies)
 
-for v in valoraciones:
-    print(v)
-
+vecinos = {}
 
 for i in range(1,max(userlist)+1,1):
+    puntuaciones = []
     user_rating = ratings.groupby(ratings.userId).get_group(i)
     media = user_rating['rating'].mean()
     
     for r in randomMovies.itertuples():
         if r[1] in user_rating.movieId.values:
-            print("Usuario " + str(i) + "\tPelícula " + r[2])
-            tmp = user_rating.loc[user_rating['movieId'] == r[1], ['rating']].values
-            print(tmp)
+            tmp = user_rating.loc[user_rating['movieId'] == r[1], ['rating']]
+            tmp = float(tmp.iloc[0]['rating'])
+            puntuaciones.append(tmp)
+        else:
+            puntuaciones.append(float(0))
 
+    correlacion = stats.mstats.pearsonr(valoraciones, puntuaciones)[0]
+    if np.isnan(correlacion):
+        correlacion = 0
+    vecinos[i] = correlacion
 
-            
-
-    #print(user_rating)
+vecinos = sorted(vecinos.items(), key=lambda x:x[1], reverse=True)[:10]
+print("Los 10 vecinos más próximos son los siguientes:")
+for key, value in vecinos:
+    print(str(key) + ": " + str(value))
