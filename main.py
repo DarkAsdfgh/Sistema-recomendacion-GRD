@@ -1,3 +1,8 @@
+#AUTORES
+# Arcadio Abraham Herrera Abril
+# Óscar Pérez Tobarra
+# Martín Jośe García muñoz
+
 import pandas as pd
 import numpy as np
 import random
