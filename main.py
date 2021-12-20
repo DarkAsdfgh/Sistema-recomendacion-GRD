@@ -10,7 +10,7 @@ movies = pd.read_csv("movies.csv")
 
 movies = movies[['movieId', 'title']]
 list_titulos = movies['title'].tolist()
-# print(random.sample(list_titulos, 20))
+
 class Movie:
     def __init__(self, movieId, title):
         self.movieId = movieId
@@ -36,8 +36,6 @@ list_titulos = movies['title'].tolist()
 list_moviesID = movies['movieId'].tolist()
 
 randomMovies = movies.sample(20)
-
-print(randomMovies)
 
 valoraciones = []
 
@@ -76,7 +74,16 @@ for i in range(1,max(userlist)+1,1):
         correlacion = 0
     vecinos[i] = correlacion
 
+recomendaciones = []
+
 vecinos = sorted(vecinos.items(), key=lambda x:x[1], reverse=True)[:10]
 print("Los 10 vecinos más próximos son los siguientes:")
 for key, value in vecinos:
-    print(str(key) + ": " + str(value))
+    print("\tUsuario " + str(key) + ": " + str(value))
+    tmp = ratings.loc[ratings['userId'] == key, ['movieId']]
+    tmp = tmp.iloc[2]['movieId']
+    recomendaciones.append(tmp)
+
+print("Se recomiendan las siguientes películas:")
+for recomendacion in recomendaciones:
+    print("\t" + list_titulos[recomendacion])
